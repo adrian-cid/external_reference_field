@@ -1,0 +1,6 @@
+name: External Reference Field
+description: Provide a external reference field.
+package: Fields
+
+type: module
+core: 8.x

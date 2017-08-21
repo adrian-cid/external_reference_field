@@ -1,0 +1,16 @@
+field.field_settings.external_reference:
+  type: mapping
+  label: 'External reference settings'
+  mapping:
+    endpoint_list_en:
+      type: string
+      label: 'English Endpoint List'
+    endpoint_individual_en:
+      type: string
+      label: 'English Endpoint List'
+    endpoint_list_fr:
+      type: string
+      label: 'French Endpoint List'
+    endpoint_individual_fr:
+      type: string
+      label: 'French Endpoint List'
