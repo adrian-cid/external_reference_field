@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FieldWidget(
  *   id = "auto_complete_widget",
- *   label = @Translation("Autocomplete"),
+ *   label = @Translation("AutoComplete"),
  *   description = @Translation("An autocomplete for External Reference."),
  *   field_types = {
  *     "external_reference"

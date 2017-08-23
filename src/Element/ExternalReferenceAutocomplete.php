@@ -13,7 +13,7 @@ use Drupal\Core\Render\Element\Textfield;
  *
  * @FormElement("external_reference_autocomplete")
  */
-class ExternalReferenceAutocomplete extends Textfield {
+class ExternalReferenceAutoComplete extends Textfield {
 
   /**
    * {@inheritdoc}
@@ -31,8 +31,8 @@ class ExternalReferenceAutocomplete extends Textfield {
     // it's value is properly checked for access.
     $info['#process_default_value'] = TRUE;
 
-    $info['#element_validate'] = [[$class, 'validateExternalReferenceAutocomplete']];
-    array_unshift($info['#process'], [$class, 'processExternalReferenceAutocomplete']);
+    $info['#element_validate'] = [[$class, 'validateExternalReferenceAutoComplete']];
+    array_unshift($info['#process'], [$class, 'processExternalReferenceAutoComplete']);
 
     return $info;
   }
@@ -41,7 +41,7 @@ class ExternalReferenceAutocomplete extends Textfield {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    if ($input === FALSE && !empty($element['#endpoint_individual'])) {
+    if ($input === FALSE && !empty($element['#endpoint_individual']) && !empty($element['#default_value'])) {
       $json = file_get_contents($element['#endpoint_individual'] . $element['#default_value']);
       $element_json = json_decode($json);
       $title = $element_json->dc_title;
@@ -63,15 +63,13 @@ class ExternalReferenceAutocomplete extends Textfield {
    * @return array
    *   The form element.
    */
-  public static function processExternalReferenceAutocomplete(array &$element, FormStateInterface $form_state, array &$complete_form) {
+  public static function processExternalReferenceAutoComplete(array &$element, FormStateInterface $form_state, array &$complete_form) {
     // Nothing to do if there is no target entity type.
     if (!empty($element['#endpoint_list'])) {
-
       $element['#autocomplete_route_name'] = 'external_reference_field.autocomplete';
       $element['#autocomplete_route_parameters'] = [
         'endpoint_list' => base64_encode($element['#endpoint_list']),
       ];
-
       return $element;
     }
   }
@@ -79,12 +77,14 @@ class ExternalReferenceAutocomplete extends Textfield {
   /**
    * Form element validation handler for entity_autocomplete elements.
    */
-  public static function validateExternalReferenceAutocomplete(array &$element, FormStateInterface $form_state, array &$complete_form) {
+  public static function validateExternalReferenceAutoComplete(array &$element, FormStateInterface $form_state, array &$complete_form) {
     // Searching the id.
-    $json = file_get_contents($element['#endpoint_list'] . rawurlencode($element['#value']));
-    $list = json_decode($json);
-    $external_id = $list->suggestions[0]->dc_identifier;
-    $form_state->setValueForElement($element, $external_id);
+    if (!empty($element['#value'])) {
+      $json = file_get_contents($element['#endpoint_list'] . rawurlencode($element['#value']));
+      $list = json_decode($json);
+      $external_id = $list->suggestions[0]->dc_identifier;
+      $form_state->setValueForElement($element, $external_id);
+    }
   }
 
 }
