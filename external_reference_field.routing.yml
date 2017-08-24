@@ -1,6 +1,6 @@
 external_reference_field.autocomplete:
   path: '/external_reference_field/autocomplete/{endpoint_list}'
   defaults:
-    _controller: '\Drupal\external_reference_field\Controller\ExternalReferenceAutocompleteController::Autocomplete'
+    _controller: '\Drupal\external_reference_field\Controller\ExternalReferenceAutoCompleteController::autoComplete'
   requirements:
     _access: 'TRUE'

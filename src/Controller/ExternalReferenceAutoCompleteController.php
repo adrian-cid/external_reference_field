@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class ExternalReferenceAutocompleteController.
+ * Class ExternalReferenceAutoCompleteController.
  *
  * @package Drupal\external_reference\Controller
  */
-class ExternalReferenceAutocompleteController extends ControllerBase {
+class ExternalReferenceAutoCompleteController extends ControllerBase {
 
   /**
-   * Autocomplete.
+   * AutoComplete.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   Page request.
@@ -24,16 +24,19 @@ class ExternalReferenceAutocompleteController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   Return the json objects.
    */
-  public function Autocomplete(Request $request, $endpoint_list) {
+  public function autoComplete(Request $request, $endpoint_list) {
     // Endpoint list.
-    $endpoint_list = base64_decode($endpoint_list);
-    $string = $request->query->get('q');
-    $json = file_get_contents($endpoint_list . $string);
-    $list = json_decode($json);
     $titles = [];
+    $string = $request->query->get('q');
 
-    if (isset($list->suggestions)) {
-      $titles = array_column($list->suggestions, 'dc_title');
+    if (!empty($string)) {
+      $endpoint_list = base64_decode($endpoint_list);
+      $json = file_get_contents($endpoint_list . $string);
+      $list = json_decode($json);
+
+      if (isset($list->suggestions)) {
+        $titles = array_column($list->suggestions, 'dc_title');
+      }
     }
 
     return new JsonResponse($titles);
